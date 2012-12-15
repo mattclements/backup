@@ -10,6 +10,8 @@ require 'etc'
 require 'open4'
 require 'thor'
 
+$LOAD_PATH.unshift File.expand_path("../../vendor/gems/fog/lib", __FILE__)
+
 ##
 # The Backup Ruby Gem
 module Backup
