@@ -13,7 +13,7 @@ module Backup
     #  Defines the minor version
     # PATCH:
     #  Defines the patch version
-    MAJOR, MINOR, PATCH = 3, 0, 27
+    MAJOR, MINOR, PATCH, ENGINEYARD_VERSION = 3, 0, 27, 1
 
     ##
     # Returns the major version ( big release based off of multiple minor releases )
@@ -34,9 +34,15 @@ module Backup
     end
 
     ##
+    # Returns the engineyard patch version
+    def self.engineyard_version
+      ENGINEYARD_VERSION
+    end
+
+    ##
     # Returns the current version of the Backup gem ( qualified for the gemspec )
     def self.current
-      "#{major}.#{minor}.#{patch}"
+      "#{major}.#{minor}.#{patch}.#{engineyard_version}"
     end
 
   end
