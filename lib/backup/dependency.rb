@@ -79,6 +79,13 @@ module Backup
           :require => 'parallel',
           :version => '~> 0.5.12',
           :for => 'Adding concurrency to Cloud-based syncers.'
+        },
+
+        'ey-core' => {
+          :require => 'ey-core',
+          :version => '~> 0.0.1',
+          :for => 'Engine Yard Cloud Account.',
+          :path => '../ey-core',
         }
       }
     end

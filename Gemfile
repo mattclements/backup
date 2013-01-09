@@ -4,12 +4,16 @@
 source 'http://rubygems.org'
 
 # Include gem dependencies from the gemspec for development purposes
-gemspec
+gemspec :name => 'backup'
 
 # Dynamically define the dependencies specified in Backup::Dependency.all
 require File.expand_path("../lib/backup/dependency", __FILE__)
 Backup::Dependency.all.each do |name, gemspec|
-  gem(name, gemspec[:version])
+  unless gemspec[:path]
+    gem name, gemspec[:version]
+  else
+    gem name, gemspec[:version], :path => gemspec[:path]
+  end
 end
 
 # Define gems to be used in the 'test' environment
