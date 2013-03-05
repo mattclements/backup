@@ -11,16 +11,19 @@ module Backup
       ##
       # Engine Yard Instance Credentials
       attr_accessor :instance_token
-      
+
       ##
       # Core API URL 
       attr_accessor :core_api_url
 
       ##
+      # Cluster ID
+      attr_accessor :cluster_id
+
+      ##
       # Creates a new instance of the storage object
       def initialize(model, storage_id = nil, &block)
         super(model, storage_id)
-
         instance_eval(&block) if block_given?
       end
 
@@ -29,8 +32,8 @@ module Backup
       def connection
         #send core-client a request with a given token, receive a url
         @connection ||= Ey::Core::Client.new(
-          :token        => instance_token,
-          :core_api_url => core_api_url,
+          :token => instance_token,
+          :url   => core_api_url,
         )
       end
 
@@ -40,12 +43,10 @@ module Backup
         backup = connection.backups.create
 
         files_to_transfer_for(@package) do |local_file, remote_file|
-          Logger.message "#{storage_name} started transferring " +
-            "'#{local_file}' to url '#{post_url}'."
+          backup_file = backup.files.create(remote_file)
 
-          File.open(File.join(local_path, local_file), 'r') do |file|
-            backup.files.create(file)
-          end
+          Logger.message "#{storage_name} performing upload of '#{local_file}' to '#{backup_file.upload_url}'."
+          connection.upload_backup_file("backup_file" => backup_file, "local_path" => File.join(local_path, local_file))
         end
       end
 

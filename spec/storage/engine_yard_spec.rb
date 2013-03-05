@@ -7,6 +7,8 @@ describe 'Backup::Storage::EngineYard' do
   let(:storage) do
     Backup::Storage::EngineYard.new(model) do |ey|
       ey.instance_token     = 'my_instance_token'
+      ey.core_api_url       = 'https://api.engineyard.com/'
+      ey.cluster_id         = '123'
     end
   end
 
@@ -49,53 +51,45 @@ describe 'Backup::Storage::EngineYard' do
     context 'when pre-configured defaults have been set' do
       before do
         Backup::Storage::EngineYard.defaults do |s|
-          s.instance_token      = 'my_instance_token'
+          s.instance_token = 'my_instance_token'
         end
       end
 
       it 'should use pre-configured defaults' do
         storage = Backup::Storage::EngineYard.new(model)
 
-        storage.instance_token.should      == 'my_instance_token'
+        storage.instance_token.should == 'my_instance_token'
         storage.storage_id.should be_nil
       end
 
       it 'should override pre-configured defaults' do
         storage = Backup::Storage::EngineYard.new(model) do |s|
-          s.instance_token      = 'new_instance_token'
+          s.instance_token = 'new_instance_token'
+          s.core_api_url   = 'https://api.engineyard.com/'
+          s.cluster_id     = '124'
         end
 
-        storage.instance_token.should      == 'new_instance_token'
+        storage.instance_token.should == 'new_instance_token'
+        storage.core_api_url.should   == 'https://api.engineyard.com/'
+        storage.cluster_id            == '124'
         storage.storage_id.should be_nil
       end
     end # context 'when pre-configured defaults have been set'
   end # describe '#initialize'
 
-
-  describe '#connection' do
-    let(:connection) { mock }
-
-    it 'should create a new connection'
-
-    it 'should return an existing connection'
-  end # describe '#connection'
-
-
   describe '#transfer!' do
-    let(:connection) { mock }
-    let(:package) { mock }
-    let(:file) { mock }
-    let(:s) { sequence '' }
-
     before do
-      storage.instance_variable_set(:@package, package)
-      storage.stubs(:storage_name).returns('Storage::EngineYard')
-      storage.stubs(:local_path).returns('/local/path')
-      storage.stubs(:connection).returns(connection)
     end
 
-    it 'should transfer the package files'
-  end # describe '#transfer!'
+    it 'should transfer the package files' do
+      core_client = storage.send(:connection)
+      lambda {
+        lambda {
+          storage.send(:transfer!)
+        }.should_change(core_client.backups.count).by(1)
+      }.should_change(core_client.backup_files.count)
+    end
+  end
 
   describe '#remove!' do
     let(:package) { mock }
