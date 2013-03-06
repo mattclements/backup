@@ -17,10 +17,6 @@ module Backup
       attr_accessor :core_api_url
 
       ##
-      # Cluster ID
-      attr_accessor :cluster_id
-
-      ##
       # Creates a new instance of the storage object
       def initialize(model, storage_id = nil, &block)
         super(model, storage_id)
@@ -55,17 +51,8 @@ module Backup
       # Any error raised will be rescued during Cycling
       # and a warning will be logged, containing the error message.
       def remove!(package)
-        remote_path = remote_path_for(package)
-
-        messages = []
-        transferred_files_for(package) do |local_file, remote_file|
-          messages << "#{storage_name} started removing '#{ local_file }'."
-        end
-        Logger.message messages.join("\n")
-
-        FileUtils.rm_r(remote_path)
+        raise NotImplementedError
       end
-
     end
   end
 end
