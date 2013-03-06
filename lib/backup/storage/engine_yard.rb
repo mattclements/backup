@@ -28,8 +28,9 @@ module Backup
       def connection
         #send core-client a request with a given token, receive a url
         @connection ||= Ey::Core::Client.new(
-          :token => instance_token,
-          :url   => core_api_url,
+          :token  => instance_token,
+          :url    => core_api_url,
+          :logger => (ENV["VERBOSE"] ? Logger.new(STDOUT) : nil),
         )
       end
 
