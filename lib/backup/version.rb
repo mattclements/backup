@@ -13,7 +13,7 @@ module Backup
     #  Defines the minor version
     # PATCH:
     #  Defines the patch version
-    MAJOR, MINOR, PATCH, ENGINE_YARD_VERSION = 3, 0, 27, 3
+    MAJOR, MINOR, PATCH, ENGINE_YARD_VERSION = 3, 0, 27, 4
 
     ##
     # Returns the major version ( big release based off of multiple minor releases )
