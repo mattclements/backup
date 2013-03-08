@@ -83,7 +83,7 @@ module Backup
 
         'ey-core' => {
           :require => 'ey-core',
-          :version => '~> 0.1.4',
+          :version => '~> 0.1.5',
           :for => 'Engine Yard Cloud Account.',
           #:path => '../core',
         }
