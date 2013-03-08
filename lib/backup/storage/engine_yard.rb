@@ -40,10 +40,10 @@ module Backup
         backup = connection.backups.create
 
         files_to_transfer_for(@package) do |local_file, remote_file|
-          backup_file = backup.files.create(remote_file)
+          backup_file = backup.files.create(filename: remote_file)
 
-          Logger.message "#{storage_name} performing upload of '#{local_file}' to '#{backup_file.upload_url}'."
-          connection.upload_backup_file("backup_file" => backup_file, "local_path" => File.join(local_path, local_file))
+          Logger.message "#{storage_name} performing upload of '#{File.join(local_path, local_file)}' to '#{backup_file.upload_url}'."
+          backup_file.upload(file: File.join(local_path, local_file))
         end
       end
 
